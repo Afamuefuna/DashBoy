@@ -1,7 +1,3 @@
-Got it 👍 I’ll make it polished with proper GitHub Markdown formatting, headings, lists, and code-style highlighting for script names. Here’s a GitHub-ready README:
-
----
-
 # 🚀 Dash Boy
 
 ## 📖 Overview
