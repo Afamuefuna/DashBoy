@@ -34,7 +34,9 @@ It also makes use of the **Unity New Input System** for handling all player cont
 * **Observer Pattern (Game Events)** → Decouples systems (e.g., score, wave updates)  
 * **Inheritance** →  
   * `EnemyBase` (abstract parent)  
-  * `ChaserEnemy` and `ShooterEnemy` extend behavior  
+    * `ChaserEnemy` and `ShooterEnemy` extend behavior  
+  * `PowerUp` (abstract parent)  
+    * `DoubleDashPowerUp` and `SpeedBoostPowerUp` extend behavior  
 
 ### 🔹 Core Systems
 * `PlayerController` → Movement, dash, collision handling  
