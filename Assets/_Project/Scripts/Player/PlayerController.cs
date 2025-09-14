@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Input")]
     private Vector3 inputDir;
+    private PlayerInputActions inputActions;
 
     [Header("Time Scale Effect")]
     float originalScale = 1;
@@ -50,14 +51,24 @@ public class PlayerController : MonoBehaviour
         powerUp = GetComponent<PlayerPowerUp>();
     }
 
+    private void Start()
+    {
+        inputActions = new PlayerInputActions();
+        inputActions.Player.Enable();
+    }
+
     private void Update()
     {
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        float h = 0f;
+        float v = 0f;
+
+        Vector2 move = inputActions.Player.Move.ReadValue<Vector2>();
+        h = move.x;
+        v = move.y;
 
         inputDir = new Vector3(h, 0f, v).normalized;
 
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.LeftShift)) && dashesLeft > 0)
+        if (inputActions.Player.Dash.triggered && dashesLeft > 0)
         {
             StartCoroutine(DoDash());
         }
@@ -121,33 +132,18 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            var enemy = collision.gameObject.GetComponent<EnemyBase>();
-            if (enemy != null)
-            {
-                var chaser = enemy as ChaserEnemy;
-                if (chaser != null && chaser.isDashing)
-                {
-                    TakeDamage(1);
-                }
-            }
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
         if (isDashing && collision.gameObject.CompareTag("Enemy"))
         {
             var enemy = collision.gameObject.GetComponent<EnemyBase>();
             Vector3 hitDirection = (transform.position - collision.transform.position).normalized;
 
             if (enemy != null)
+            {
                 enemy.TakeDamage(999, hitDirection);
-
-            GameEvents.OnScoreChanged?.Invoke(1);
-            AudioManager.Instance.Play("Hit");
-            StartCoroutine(HitStop(timeScaleEffectDuration, timeScaleEffectSlowScale, timeScaleEffectSmoothTime));
+                GameEvents.OnScoreChanged?.Invoke(1);
+                AudioManager.Instance.Play("Hit");
+                StartCoroutine(HitStop(timeScaleEffectDuration, timeScaleEffectSlowScale, timeScaleEffectSmoothTime));
+            }
         }
     }
 
@@ -178,8 +174,9 @@ public class PlayerController : MonoBehaviour
         Time.fixedDeltaTime = 0.02f;
     }
 
-    void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
+        if (isDashing) return;
         health.TakeDamage(damage);
     }
 

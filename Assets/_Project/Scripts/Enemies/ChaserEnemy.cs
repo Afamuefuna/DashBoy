@@ -6,12 +6,12 @@ public class ChaserEnemy : EnemyBase
     [Header("Chaser Settings")]
     public bool isDashing = false;
     private float attackDelay;
-    private float attackDuration = 0.3f;
+    [SerializeField] private float attackDuration = 0.15f;
 
     protected override void Start()
     {
         base.Start();
-        attackDelay = Random.Range(4f, 6f);
+        attackDelay = Random.Range(2f, 3f);
     }
     protected override void Update()
     {
@@ -69,6 +69,8 @@ public class ChaserEnemy : EnemyBase
 
         if (player != null)
         {
+            yield return new WaitForSeconds(0.25f);
+
             Vector3 dashDirection = (player.position - transform.position).normalized;
             float dashForce = 20f;
 
@@ -94,6 +96,21 @@ public class ChaserEnemy : EnemyBase
             transform.rotation = Quaternion.LookRotation(direction.normalized);
             Vector3 desired = direction.normalized * data.moveSpeed;
             rb.MovePosition(rb.position + desired * Time.fixedDeltaTime);
+        }
+    }
+
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (!isDashing)
+            {
+                var player = collision.gameObject.GetComponent<PlayerController>();
+                if (player != null)
+                {
+                    player.TakeDamage(1);
+                }
+            }
         }
     }
 }
