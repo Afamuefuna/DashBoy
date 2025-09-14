@@ -72,6 +72,7 @@ public class WaveManager : MonoBehaviour
 
             Debug.Log($"Wave {currentWave + 1} complete!");
             currentWave++;
+            GameEvents.OnGameUpdate?.Invoke("Wave Complete");
             yield return new WaitForSeconds(wave.waveDelay);
         }
 

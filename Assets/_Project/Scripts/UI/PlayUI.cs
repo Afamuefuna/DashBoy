@@ -4,14 +4,15 @@ using UnityEngine.UI;
 
 public class PlayUI : MonoBehaviour
 {
-    public TMP_Text scoreText;
-    public TMP_Text healthText;
-    public TMP_Text dashText;
-    public TMP_Text gameOverScoreText;
-    public Button playAgainButton;
-    public Button mainMenuButton;
-    public GameObject gameplayUI;
-    public GameObject gameOverUI;
+    [SerializeField] TMP_Text scoreText;
+    [SerializeField] TMP_Text healthText;
+    [SerializeField] TMP_Text dashText;
+    [SerializeField] TMP_Text updateText;
+    [SerializeField] TMP_Text gameOverScoreText;
+    [SerializeField] Button playAgainButton;
+    [SerializeField] Button mainMenuButton;
+    [SerializeField] GameObject gameplayUI;
+    [SerializeField] GameObject gameOverUI;
     private int score = 0;
 
 
@@ -31,7 +32,7 @@ public class PlayUI : MonoBehaviour
         GameEvents.OnPlayerDamaged += OnPlayerDamaged;
         GameEvents.OnDashUsed += OnDashUsed;
         GameEvents.OnPlayerDied += OnPlayerDied;
-        GameEvents.OnPickupCollected += OnPickup;
+        GameEvents.OnGameUpdate += OnGameUpdate;
     }
 
     private void OnDisable()
@@ -40,7 +41,7 @@ public class PlayUI : MonoBehaviour
         GameEvents.OnPlayerDamaged -= OnPlayerDamaged;
         GameEvents.OnDashUsed -= OnDashUsed;
         GameEvents.OnPlayerDied -= OnPlayerDied;
-        GameEvents.OnPickupCollected -= OnPickup;
+        GameEvents.OnGameUpdate -= OnGameUpdate;
     }
 
     private void OnScoreChanged(int deltaOrOne)
@@ -66,8 +67,15 @@ public class PlayUI : MonoBehaviour
         if (gameOverScoreText) gameOverScoreText.text = $"Score: {score}";
     }
 
-    private void OnPickup(string name)
+    private void OnGameUpdate(string name)
     {
+        if (updateText) updateText.text = $"{name}";
+        CancelInvoke(nameof(DisableUpdateText));
+        Invoke(nameof(DisableUpdateText), 3);
+    }
 
+    private void DisableUpdateText()
+    {
+        if (updateText) updateText.text = "";
     }
 }

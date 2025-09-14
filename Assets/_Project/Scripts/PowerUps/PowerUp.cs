@@ -20,6 +20,7 @@ public abstract class PowerUp : MonoBehaviour
         PlayerController pc = other.GetComponent<PlayerController>();
         AudioManager.Instance.Play("Collect");
         Accept(pc.powerUp);
+        GameEvents.OnGameUpdate?.Invoke(data.pickupName);
         Destroy(gameObject);
     }
 }

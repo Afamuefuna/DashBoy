@@ -6,5 +6,5 @@ public static class GameEvents
     public static Action<int> OnPlayerDamaged;
     public static Action OnPlayerDied;
     public static Action<float> OnDashUsed;
-    public static Action<string> OnPickupCollected;
+    public static Action<string> OnGameUpdate;
 }
