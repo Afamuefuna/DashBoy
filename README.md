@@ -66,5 +66,3 @@ This project was built with **SOLID principles** and clean, modular design.
 * General **SOLID principle** guidelines for maintainable architecture
 
 ---
-
-Do you want me to also create a **simple class/architecture diagram** (in Markdown or ASCII flowchart style) so the assignment looks even more professional?
